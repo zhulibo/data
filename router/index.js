@@ -1,10 +1,10 @@
 const Router = require('@koa/router')
-const list = require('./list')
-
 const router = new Router()
+const sys = require('./sys')
+const test = require('./test')
 
-router.use('/list', list.routes(), list.allowedMethods())
 
-router.redirect('/', '/list')
+router.use('/sys', sys.routes(), sys.allowedMethods())
+router.use('/test', test.routes(), test.allowedMethods())
 
 module.exports = router
