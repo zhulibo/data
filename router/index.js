@@ -1,10 +1,11 @@
 const Router = require('@koa/router')
 const router = new Router()
-const sys = require('./sys')
-const test = require('./test')
+const common = require('./common/common')
+const user = require("./user/user")
+const article = require('./article')
 
-
-router.use('/sys', sys.routes(), sys.allowedMethods())
-router.use('/test', test.routes(), test.allowedMethods())
+router.use('/common', common.routes(), common.allowedMethods())
+      .use('/user', user.routes(), user.allowedMethods())
+      .use('/article', article.routes(), article.allowedMethods())
 
 module.exports = router
