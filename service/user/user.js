@@ -62,8 +62,7 @@ async function getRouter(ctx) {
             path: 'newsEdit',
             hidden: true,
             meta: {
-              title: '新闻编辑',
-              cache: true
+              title: '新闻编辑'
             },
             component: '/news/newsEdit'
           },

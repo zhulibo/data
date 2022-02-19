@@ -7,7 +7,7 @@ const jwt = require('./middlewares/jwt')
 
 const app = new Koa()
 const port = 3000
-// ctx.set('Access-Control-Allow-Origin', 'http://localhost:8080');
+
 app
   .use(logger())
   .use(cors({

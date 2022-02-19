@@ -5,7 +5,8 @@ let pool = mysql.createPool({
   port            : '3306',
   user            : 'root',
   password        : '123456',
-  database        : 'test'
+  database        : 'test',
+  dateStrings     :  true
 })
 
 function query(sql) {

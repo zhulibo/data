@@ -1,4 +1,5 @@
 const db = require('../../utils/db')
+const {spliceSql} = require("../../utils/common");
 
 async function getNewsList(page, rows) {
   const sql = `select * from news order by id desc limit ${(page - 1)*rows}, ${rows}`
@@ -49,24 +50,7 @@ async function addNews(body) {
 
 async function updateNews(body) {
   let sql = `update news set `
-  if(body.hasOwnProperty('title')){
-    sql += `title = '${body.title}',`
-  }
-  if(body.hasOwnProperty('type')){
-    sql += `type = '${body.type}',`
-  }
-  if(body.hasOwnProperty('status')){
-    sql += `status = '${body.status}',`
-  }
-  if(body.hasOwnProperty('imgUrl')){
-    sql += `imgUrl = '${body.imgUrl}',`
-  }
-  if(body.hasOwnProperty('content')){
-    sql += `content = '${body.content}',`
-  }
-  if(sql[sql.length - 1] == ','){
-    sql = sql.slice(0, -1)
-  }
+  sql = spliceSql(sql, body, ['title', 'type', 'status', 'imgUrl', 'content'])
   sql += ` where id = ${body.id}`
   const data = await db.query(sql)
   return {
