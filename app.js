@@ -11,7 +11,9 @@ const port = 3000
 app
   .use(logger())
   .use(cors({
-    origin: 'http://localhost:2000',
+    // origin: 'http://localhost:2000',
+    // origin: 'http://localhost:8080',
+    origin: '*',
   }))
   .use(bodyparser())
   .use(jwt.checkToken())
