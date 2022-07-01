@@ -4,7 +4,7 @@ let pool = mysql.createPool({
   host            : 'localhost',
   port            : '3306',
   user            : 'root',
-  password        : '123456',
+  password        : 'zhu022044',
   database        : 'test',
   dateStrings     :  true
 })
@@ -31,6 +31,6 @@ function query(sql) {
 // show databases;
 // use test;
 // show tables;
-// quit/exit
+// quit/exit;
 
 exports.query = query

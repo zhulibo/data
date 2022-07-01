@@ -6,7 +6,7 @@ const router = require('./router')
 const jwt = require('./middlewares/jwt')
 
 const app = new Koa()
-const port = 3000
+const port = 9000
 
 app
   .use(logger())
