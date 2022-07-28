@@ -27,7 +27,7 @@ function query(sql) {
 
 // 管理员权限运行
 // net start mysql80
-// mysql -uroot -p123456
+// mysql -uroot -pzhu022044
 // show databases;
 // use test;
 // show tables;
