@@ -6,9 +6,10 @@ function checkToken(){
     // 免验证白名单
     const whiteUrlList = [
       '/user/login',
-      '/common/uploadFile'
+      '/common/uploadFile',
+      '/webSocket'
     ]
-    if(!whiteUrlList.includes(ctx.url)){
+    if (!whiteUrlList.includes(ctx.url)) {
       let token = ctx.header.authorization
       try{
         jsonwebtoken.verify(token.split(' ')[1], '666')
@@ -20,7 +21,17 @@ function checkToken(){
           msg: err.message
         }
       }
-    }else{
+    }
+    // else if (ctx.url === '/webSocket') {
+    //   console.log(1)
+    //   ctx.status = 200
+    //   ctx.body = {
+    //     code: 0,
+    //     msg: ''
+    //   }
+    //   console.log(2)
+    // }
+    else {
       await next()
     }
   }
