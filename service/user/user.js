@@ -11,11 +11,11 @@ async function login(ctx) {
         msg: '成功',
         data: {
           token: jsonwebtoken.sign(
-            { name: res[0].account, id: res[0].user_id },  // 加密userToken
+            { name: res[0].account, id: res[0].userId },  // 加密userToken
             '666',
             { expiresIn: '30d' }
           ),
-          userId: res[0].user_id,
+          userId: res[0].userId,
           userName: res[0].account,
           phone: res[0].phone,
           email: res[0].email,
@@ -86,20 +86,20 @@ async function getRouter(ctx) {
         component: 'layout',
         children: [
           {
-            name: 'webSocket',
-            path: 'webSocket',
-            meta: {
-              title: 'webSocket',
-            },
-            component: '/playground/webSocket'
-          },
-          {
             name: 'chart',
             path: 'chart',
             meta: {
               title: 'chart',
             },
             component: '/playground/chart'
+          },
+          {
+            name: 'test',
+            path: 'test',
+            meta: {
+              title: 'test',
+            },
+            component: '/playground/test'
           },
         ]
       },

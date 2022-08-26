@@ -7,7 +7,6 @@ function checkToken(){
     const whiteUrlList = [
       '/user/login',
       '/common/uploadFile',
-      '/webSocket'
     ]
     if (!whiteUrlList.includes(ctx.url)) {
       let token = ctx.header.authorization
@@ -22,15 +21,6 @@ function checkToken(){
         }
       }
     }
-    // else if (ctx.url === '/webSocket') {
-    //   console.log(1)
-    //   ctx.status = 200
-    //   ctx.body = {
-    //     code: 0,
-    //     msg: ''
-    //   }
-    //   console.log(2)
-    // }
     else {
       await next()
     }
