@@ -70,9 +70,36 @@ async function getRouter(ctx) {
             name: 'newsCate',
             path: 'newsCate',
             meta: {
-              title: '新闻分类'
+              title: '新闻分类',
+              cache: true
             },
             component: '/news/newsCate'
+          },
+        ]
+      },
+      {
+        name: 'playground',
+        path: '/playground',
+        meta: {
+          title: '测试'
+        },
+        component: 'layout',
+        children: [
+          {
+            name: 'webSocket',
+            path: 'webSocket',
+            meta: {
+              title: 'webSocket',
+            },
+            component: '/playground/webSocket'
+          },
+          {
+            name: 'chart',
+            path: 'chart',
+            meta: {
+              title: 'chart',
+            },
+            component: '/playground/chart'
           },
         ]
       },
