@@ -1,5 +1,6 @@
 const db = require('../../utils/db')
 const jsonwebtoken = require('jsonwebtoken')
+const {getMenuList} = require("../menu/menu");
 
 async function login(ctx) {
   let {account, password} = ctx.request.body
@@ -36,102 +37,29 @@ async function login(ctx) {
 }
 
 async function getRouter(ctx) {
+  const res = await getMenuList()
+  const menuTree = res.data
+  // 把自定义属性放在meta里（前端vue-router会过滤掉meta之外的属性） // todo 3级以上未处理
+  for (let i = 0; i < menuTree.length; i++) {
+    menuTree[i].meta = {
+      title: menuTree[i].title,
+      hidden: menuTree[i].hidden === 1,
+      cache: menuTree[i].cache === 1,
+    }
+    if(menuTree[i].children?.length > 0) {
+      for (let j = 0; j < menuTree[i].children.length; j++) {
+        menuTree[i].children[j].meta = {
+          title: menuTree[i].children[j].title,
+          hidden: menuTree[i].children[j].hidden === 1,
+          cache: menuTree[i].children[j].cache === 1,
+        }
+      }
+    }
+  }
   return {
     code: 0,
     msg: '成功',
-    data: [
-      {
-        name: 'news',
-        path: '/news',
-        meta: {
-          title: '新闻'
-        },
-        component: 'layout',
-        children: [
-          {
-            name: 'newsList',
-            path: 'newsList',
-            meta: {
-              title: '新闻列表',
-              cache: true
-            },
-            component: '/news/newsList'
-          },
-          {
-            name: 'newsEdit',
-            path: 'newsEdit',
-            meta: {
-              title: '新闻编辑',
-              hidden: true,
-            },
-            component: '/news/newsEdit'
-          },
-          {
-            name: 'newsCate',
-            path: 'newsCate',
-            meta: {
-              title: '新闻分类',
-              cache: true
-            },
-            component: '/news/newsCate'
-          },
-        ]
-      },
-      {
-        name: 'playground',
-        path: '/playground',
-        meta: {
-          title: '测试'
-        },
-        component: 'layout',
-        children: [
-          {
-            name: 'chart',
-            path: 'chart',
-            meta: {
-              title: 'chart',
-            },
-            component: '/playground/chart'
-          },
-          {
-            name: 'test',
-            path: 'test',
-            meta: {
-              title: 'test',
-            },
-            component: '/playground/test'
-          },
-        ]
-      },
-      {
-        name: 'sys',
-        path: '/common',
-        meta: {
-          title: '系统'
-        },
-        component: 'layout',
-        children: [
-          {
-            name: 'menu',
-            path: 'menu',
-            meta: {
-              title: '菜单'
-            },
-            component: 'routeWrapper',
-            children: [
-              {
-                name: 'menuList',
-                path: 'menuList',
-                meta: {
-                  title: '菜单列表'
-                },
-                component: '/menu/menuList'
-              },
-            ]
-          },
-        ]
-      },
-    ]
+    data: menuTree
   }
 }
 
