@@ -39,7 +39,7 @@ async function getNewsDetail(id) {
 }
 
 async function addNews(body) {
-  const sql = `insert into news (title, type, status, imgUrl, content) values ('${body.title}', '${body.type}', '${body.status}', '${body.imgUrl}', '${body.content}')`
+  const sql = `insert into news (title, cateId, status, imgUrl, content) values ('${body.title}', '${body.cateId}', '${body.status}', '${body.imgUrl}', '${body.content}')`
   const data = await db.query(sql)
   return {
     code: 0,
@@ -50,7 +50,7 @@ async function addNews(body) {
 
 async function updateNews(body) {
   let sql = `update news set `
-  sql = spliceSql(sql, body, ['title', 'type', 'status', 'imgUrl', 'content'])
+  sql = spliceSql(sql, body, ['title', 'cateId', 'status', 'imgUrl', 'content'])
   sql += ` where id = ${body.id}`
   const data = await db.query(sql)
   return {
@@ -61,7 +61,7 @@ async function updateNews(body) {
 }
 
 // async function updateNews(body) {
-//   const sql = `update news set title = '${body.title}', type = '${body.type}', status = '${body.status}', imgUrl = '${body.imgUrl}', content = '${body.content}' where id = ${body.id}`
+//   const sql = `update news set title = '${body.title}', cateId = '${body.cateId}', status = '${body.status}', imgUrl = '${body.imgUrl}', content = '${body.content}' where id = ${body.id}`
 //   const data = await db.query(sql)
 //   return {
 //     code: 0,

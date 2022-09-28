@@ -1,8 +1,8 @@
 const db = require('../../utils/db')
 const {spliceSql} = require("../../utils/common");
 
-async function getMenuList() {
-  const sql = `select * from menu order by id desc`
+async function getNewsCateList() {
+  const sql = `select * from news_cate order by id desc`
   let data = await db.query(sql)
 
   console.time()
@@ -15,7 +15,7 @@ async function getMenuList() {
     }
   }
 
-  let menuList // 最终多级菜单
+  let newsCateList // 最终多级新闻分类
   const arr = [] // 根据parentId组成的二维数组
   let isNewParentId = true // 是否新的parentId
   let index = 0
@@ -31,53 +31,53 @@ async function getMenuList() {
     if(isNewParentId) {
       arr.push({
         parentId: data[i].parentId,
-        menu: [data[i]],
+        newsCate: [data[i]],
       })
     } else {
-      arr[index].menu.push(data[i])
+      arr[index].newsCate.push(data[i])
     }
     isNewParentId = true
   }
 
-  // 根据orderNum排序arr[i].menu
+  // 根据orderNum排序arr[i].newsCate
   for (let i = 0; i < arr.length; i++) {
-    arr[i].menu.sort((a, b) => {
+    arr[i].newsCate.sort((a, b) => {
       return a.orderNum - b.orderNum
     })
   }
 
-  // 并入一级菜单
+  // 并入一级新闻分类
   for (let i = 0; i < arr.length; i++) {
     if(arr[i].parentId === '') {
-      menuList = arr[i].menu
+      newsCateList = arr[i].newsCate
     }
   }
 
-  // 向一级菜单追加多级子菜单
-  function addSubMenu (menuList) {
-    for (let i = 0; i < menuList.length; i++) {
+  // 向一级新闻分类追加多级子新闻分类
+  function addSubNewsCate (newsCateList) {
+    for (let i = 0; i < newsCateList.length; i++) {
       for (let j = 0; j < arr.length; j++) {
-        if (arr[j].parentId === String(menuList[i].id)) {
-          menuList[i].children = arr[j].menu
-          addSubMenu(menuList[i].children)
+        if (arr[j].parentId === String(newsCateList[i].id)) {
+          newsCateList[i].children = arr[j].newsCate
+          addSubNewsCate(newsCateList[i].children)
         }
       }
     }
   }
 
-  addSubMenu(menuList)
+  addSubNewsCate(newsCateList)
 
   console.timeEnd() // 好像还没有多次查数据库快，待测试
 
   return {
     code: 0,
     msg: '成功',
-    data: menuList
+    data: newsCateList
   }
 }
 
-async function getMenuDetail(id) {
-  const sql = 'select * from menu where id = ' + id
+async function getNewsCateDetail(id) {
+  const sql = 'select * from news_cate where id = ' + id
   const data = await db.query(sql)
   if(data.length == 1) {
     return {
@@ -100,11 +100,11 @@ async function getMenuDetail(id) {
   }
 }
 
-async function addMenu(body) {
-  const sql = `insert into menu
-  (parentId, title, component, name, path, hidden, cache, orderNum, status)
+async function addNewsCate(body) {
+  const sql = `insert into news_cate
+  (parentId, name, orderNum, status)
   values
-  ('${body.parentId}', '${body.title}', '${body.component}', '${body.name}', '${body.path}', '${body.hidden}', '${body.cache}', '${body.orderNum}', '${body.status}')`
+  ('${body.parentId}', '${body.name}', '${body.orderNum}', '${body.status}')`
   const data = await db.query(sql)
   return {
     code: 0,
@@ -113,9 +113,9 @@ async function addMenu(body) {
   }
 }
 
-async function updateMenu(body) {
-  let sql = `update menu set `
-  sql = spliceSql(sql, body, ['parentId', 'title', 'component', 'name', 'path', 'hidden', 'cache', 'orderNum', 'status'])
+async function updateNewsCate(body) {
+  let sql = `update news_cate set `
+  sql = spliceSql(sql, body, ['parentId', 'name', 'orderNum', 'status'])
   sql += ` where id = ${body.id}`
   const data = await db.query(sql)
   return {
@@ -125,8 +125,8 @@ async function updateMenu(body) {
   }
 }
 
-async function delMenu(id) {
-  const sql = `delete from menu where id = ` + id
+async function delNewsCate(id) {
+  const sql = `delete from news_cate where id = ` + id
   const data = await db.query(sql)
   return {
     code: 0,
@@ -136,9 +136,9 @@ async function delMenu(id) {
 }
 
 module.exports = {
-  getMenuList,
-  getMenuDetail,
-  addMenu,
-  updateMenu,
-  delMenu,
+  getNewsCateList,
+  getNewsCateDetail,
+  addNewsCate,
+  updateNewsCate,
+  delNewsCate,
 }

@@ -1,6 +1,7 @@
 const newsService = require('../../service/article/news')
 
 async function getNewsList(ctx){
+  console.log(ctx.query) // todo
   const { page, rows } = ctx.query
   let data = await newsService.getNewsList(page, rows)
   return ctx.body = data

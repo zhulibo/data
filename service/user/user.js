@@ -39,23 +39,20 @@ async function login(ctx) {
 async function getRouter(ctx) {
   const res = await getMenuList()
   const menuTree = res.data
-  // 把自定义属性放在meta里（前端vue-router会过滤掉meta之外的属性） // todo 3级以上未处理
-  for (let i = 0; i < menuTree.length; i++) {
-    menuTree[i].meta = {
-      title: menuTree[i].title,
-      hidden: menuTree[i].hidden === 1,
-      cache: menuTree[i].cache === 1,
-    }
-    if(menuTree[i].children?.length > 0) {
-      for (let j = 0; j < menuTree[i].children.length; j++) {
-        menuTree[i].children[j].meta = {
-          title: menuTree[i].children[j].title,
-          hidden: menuTree[i].children[j].hidden === 1,
-          cache: menuTree[i].children[j].cache === 1,
-        }
+  // 把自定义属性放在meta上(vue-router会过滤掉除meta之外的属性)
+  function setMeta(list) {
+    for (let i = 0; i < list.length; i++) {
+      list[i].meta = {
+        title: list[i].title,
+        hidden: list[i].hidden === 1,
+        cache: list[i].cache === 1,
+      }
+      if(list[i].children?.length > 0) {
+        setMeta(list[i].children)
       }
     }
   }
+  setMeta(menuTree)
   return {
     code: 0,
     msg: '成功',
