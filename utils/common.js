@@ -1,4 +1,5 @@
-function spliceSql(sql, body, params) {
+// 拼合update语句
+function updateSql(sql, body, params) {
   for (let i = 0; i < params.length; i++) {
     if(body.hasOwnProperty(params[i])){
       sql += `${params[i]} = '${body[params[i]]}',`
@@ -10,6 +11,18 @@ function spliceSql(sql, body, params) {
   return sql
 }
 
+// 拼合where语句
+function whereSql(params) {
+  let sql = ' where 1 = 1'
+  for (const key in params) {
+    if (params[key]) {
+      sql += ` and ${key} = '${params[key]}'`
+    }
+  }
+  return sql
+}
+
 module.exports = {
-  spliceSql
+  updateSql,
+  whereSql,
 }

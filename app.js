@@ -2,7 +2,7 @@ const Koa = require('koa')
 const logger = require('koa-logger')
 const cors = require('koa2-cors')
 const resDuration = require('./middlewares/resDuration')
-const bodyparser = require('koa-bodyparser')
+const bodyParser = require('koa-bodyParser')
 const router = require('./router')
 const jwt = require('./middlewares/jwt')
 
@@ -16,7 +16,7 @@ app
     // origin: 'http://localhost:5173',
     origin: '*',
   }))
-  .use(bodyparser())
+  .use(bodyParser())
   .use(jwt.checkToken())
   .use(router.routes())
   .use(router.allowedMethods())

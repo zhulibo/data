@@ -1,8 +1,8 @@
 const db = require('../../utils/db')
-const {spliceSql} = require("../../utils/common");
+const {updateSql} = require("../../utils/common");
 
 async function getNewsCateList() {
-  const sql = `select * from news_cate order by id desc`
+  const sql = `select * from news_cate`
   let data = await db.query(sql)
 
   console.time()
@@ -115,7 +115,7 @@ async function addNewsCate(body) {
 
 async function updateNewsCate(body) {
   let sql = `update news_cate set `
-  sql = spliceSql(sql, body, ['parentId', 'name', 'orderNum', 'status'])
+  sql = updateSql(sql, body, ['parentId', 'name', 'orderNum', 'status'])
   sql += ` where id = ${body.id}`
   const data = await db.query(sql)
   return {

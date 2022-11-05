@@ -1,8 +1,8 @@
 const db = require('../../utils/db')
-const {spliceSql} = require("../../utils/common");
+const {updateSql} = require("../../utils/common");
 
 async function getMenuList() {
-  const sql = `select * from menu order by id desc`
+  const sql = `select * from menu`
   let data = await db.query(sql)
 
   console.time()
@@ -115,7 +115,7 @@ async function addMenu(body) {
 
 async function updateMenu(body) {
   let sql = `update menu set `
-  sql = spliceSql(sql, body, ['parentId', 'title', 'component', 'name', 'path', 'hidden', 'cache', 'orderNum', 'status'])
+  sql = updateSql(sql, body, ['parentId', 'title', 'component', 'name', 'path', 'hidden', 'cache', 'orderNum', 'status'])
   sql += ` where id = ${body.id}`
   const data = await db.query(sql)
   return {

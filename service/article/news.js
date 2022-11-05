@@ -1,11 +1,20 @@
 const db = require('../../utils/db')
-const {spliceSql} = require("../../utils/common");
+const {updateSql, whereSql} = require("../../utils/common");
 
-async function getNewsList(page, rows) {
-  const sql = `select * from news order by id desc limit ${(page - 1)*rows}, ${rows}`
+async function getNewsList( params, startTime, endTime, page, rows) {
+  let where = whereSql(params)
+  if (startTime) where += ` and createTime >= '${startTime}'`
+  if (endTime) where += ` and createTime <= '${endTime}'`
+
+  let sql = 'select * from news'
+  sql += where
+  sql += ` order by createTime desc limit ${(page - 1)*rows}, ${rows}`
   const data = await db.query(sql)
-  const sqlTotal = `select count(*) from news`
+
+  let sqlTotal = `select count(*) from news`
+  sqlTotal += where
   const [{'count(*)': total}] = await db.query(sqlTotal)
+
   return {
     code: 0,
     msg: '成功',
@@ -50,7 +59,7 @@ async function addNews(body) {
 
 async function updateNews(body) {
   let sql = `update news set `
-  sql = spliceSql(sql, body, ['title', 'cateId', 'status', 'imgUrl', 'content'])
+  sql = updateSql(sql, body, ['title', 'cateId', 'status', 'imgUrl', 'content'])
   sql += ` where id = ${body.id}`
   const data = await db.query(sql)
   return {
