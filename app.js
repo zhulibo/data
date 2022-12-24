@@ -2,7 +2,7 @@ const Koa = require('koa')
 const logger = require('koa-logger')
 const cors = require('koa2-cors')
 const resDuration = require('./middlewares/resDuration')
-const bodyParser = require('koa-bodyParser')
+const bodyParser = require('koa-bodyparser')
 const router = require('./router')
 const jwt = require('./middlewares/jwt')
 
