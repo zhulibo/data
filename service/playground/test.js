@@ -1,17 +1,17 @@
 const db = require('../../utils/db')
 const {updateSql, whereSql} = require("../../utils/common");
 
-async function getNewsList(params, startTime, endTime, page, rows) {
+async function getTestList(params, startTime, endTime, page, rows) {
   let where = whereSql(params)
   if (startTime) where += ` and createTime >= '${startTime}'`
   if (endTime) where += ` and createTime <= '${endTime}'`
 
-  let sql = 'select * from news'
+  let sql = 'select * from test'
   sql += where
   sql += ` order by createTime desc limit ${(page - 1)*rows}, ${rows}`
   const data = await db.query(sql)
 
-  let sqlTotal = `select count(*) from news`
+  let sqlTotal = `select count(*) from test`
   sqlTotal += where
   const [{'count(*)': total}] = await db.query(sqlTotal)
 
@@ -23,8 +23,8 @@ async function getNewsList(params, startTime, endTime, page, rows) {
   }
 }
 
-async function getNewsDetail(id) {
-  const sql = 'select * from news where id = ' + id
+async function getTestDetail(id) {
+  const sql = 'select * from test where id = ' + id
   const data = await db.query(sql)
   if(data.length == 1) {
     return {
@@ -47,11 +47,11 @@ async function getNewsDetail(id) {
   }
 }
 
-async function addNews(body) {
-  const sql = `insert into news
-  (title, cateId, status, imgUrl, content)
+async function addTest(body) {
+  const sql = `insert into test
+  (title, status, size)
   values
-  ('${body.title}', '${body.cateId}', '${body.status}', '${body.imgUrl}', '${body.content}')`
+  ('${body.title}', '${body.status}', '${body.size}')`
   const data = await db.query(sql)
   return {
     code: 0,
@@ -60,9 +60,9 @@ async function addNews(body) {
   }
 }
 
-async function updateNews(body) {
-  let sql = `update news set `
-  sql = updateSql(sql, body, ['title', 'cateId', 'status', 'imgUrl', 'content'])
+async function updateTest(body) {
+  let sql = `update test set `
+  sql = updateSql(sql, body, ['title', 'status', 'size'])
   sql += ` where id = ${body.id}`
   const data = await db.query(sql)
   return {
@@ -72,18 +72,8 @@ async function updateNews(body) {
   }
 }
 
-// async function updateNews(body) {
-//   const sql = `update news set title = '${body.title}', cateId = '${body.cateId}', status = '${body.status}', imgUrl = '${body.imgUrl}', content = '${body.content}' where id = ${body.id}`
-//   const data = await db.query(sql)
-//   return {
-//     code: 0,
-//     msg: '成功',
-//     data: {}
-//   }
-// }
-
-async function delNews(id) {
-  const sql = `delete from news where id = ` + id
+async function delTest(id) {
+  const sql = `delete from test where id = ` + id
   const data = await db.query(sql)
   return {
     code: 0,
@@ -93,9 +83,9 @@ async function delNews(id) {
 }
 
 module.exports = {
-  getNewsList,
-  getNewsDetail,
-  addNews,
-  updateNews,
-  delNews,
+  getTestList,
+  getTestDetail,
+  addTest,
+  updateTest,
+  delTest,
 }
