@@ -1,17 +1,17 @@
 const db = require('../../utils/db')
 const {updateSql, whereSql} = require("../../utils/common");
 
-async function getTestList(params, startTime, endTime, page, rows) {
+async function getExampleList(params, startTime, endTime, page, rows) {
   let where = whereSql(params)
   if (startTime) where += ` and createTime >= '${startTime}'`
   if (endTime) where += ` and createTime <= '${endTime}'`
 
-  let sql = 'select * from test'
+  let sql = 'select * from example'
   sql += where
   sql += ` order by createTime desc limit ${(page - 1)*rows}, ${rows}`
   const data = await db.query(sql)
 
-  let sqlTotal = `select count(*) from test`
+  let sqlTotal = `select count(*) from example`
   sqlTotal += where
   const [{'count(*)': total}] = await db.query(sqlTotal)
 
@@ -23,8 +23,8 @@ async function getTestList(params, startTime, endTime, page, rows) {
   }
 }
 
-async function getTestDetail(id) {
-  const sql = 'select * from test where id = ' + id
+async function getExampleDetail(id) {
+  const sql = 'select * from example where id = ' + id
   const data = await db.query(sql)
   if(data.length == 1) {
     return {
@@ -47,8 +47,8 @@ async function getTestDetail(id) {
   }
 }
 
-async function addTest(body) {
-  const sql = `insert into test
+async function addExample(body) {
+  const sql = `insert into example
   (title, status, size)
   values
   ('${body.title}', '${body.status}', '${body.size}')`
@@ -60,8 +60,8 @@ async function addTest(body) {
   }
 }
 
-async function updateTest(body) {
-  let sql = `update test set `
+async function updateExample(body) {
+  let sql = `update example set `
   sql = updateSql(sql, body, ['title', 'status', 'size'])
   sql += ` where id = ${body.id}`
   const data = await db.query(sql)
@@ -72,8 +72,8 @@ async function updateTest(body) {
   }
 }
 
-async function delTest(id) {
-  const sql = `delete from test where id = ` + id
+async function delExample(id) {
+  const sql = `delete from example where id = ` + id
   const data = await db.query(sql)
   return {
     code: 0,
@@ -83,9 +83,9 @@ async function delTest(id) {
 }
 
 module.exports = {
-  getTestList,
-  getTestDetail,
-  addTest,
-  updateTest,
-  delTest,
+  getExampleList,
+  getExampleDetail,
+  addExample,
+  updateExample,
+  delExample,
 }

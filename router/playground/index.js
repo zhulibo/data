@@ -1,7 +1,7 @@
 const Router = require('@koa/router')
 const router = new Router()
-const test = require('./test')
+const example = require('./example')
 
-router.use('/test', test.routes(), test.allowedMethods())
+router.use('/example', example.routes(), example.allowedMethods())
 
 module.exports = router
