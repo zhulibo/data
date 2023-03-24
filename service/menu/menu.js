@@ -5,8 +5,6 @@ async function getMenuList() {
   const sql = `select * from menu`
   let data = await db.query(sql)
 
-  console.time()
-
   if(data.length === 0) {
     return {
       code: 0,
@@ -15,59 +13,37 @@ async function getMenuList() {
     }
   }
 
-  let menuList // 最终多级菜单
-  const arr = [] // 根据parentId组成的二维数组
-  let isNewParentId = true // 是否新的parentId
-  let index = 0
-
-  // data转化为arr
-  for (let i = 0; i < data.length; i++) {
-    for (let j = 0; j < arr.length; j++) {
-      if (arr[j].parentId === data[i].parentId) {
-        isNewParentId = false
-        index = j
-      }
-    }
-    if(isNewParentId) {
-      arr.push({
-        parentId: data[i].parentId,
-        menu: [data[i]],
-      })
-    } else {
-      arr[index].menu.push(data[i])
-    }
-    isNewParentId = true
-  }
-
-  // 根据orderNum排序arr[i].menu
-  for (let i = 0; i < arr.length; i++) {
-    arr[i].menu.sort((a, b) => {
-      return a.orderNum - b.orderNum
-    })
-  }
-
-  // 并入一级菜单
-  for (let i = 0; i < arr.length; i++) {
-    if(arr[i].parentId === '') {
-      menuList = arr[i].menu
-    }
-  }
-
-  // 向一级菜单追加多级子菜单
-  function addSubMenu (menuList) {
-    for (let i = 0; i < menuList.length; i++) {
-      for (let j = 0; j < arr.length; j++) {
-        if (arr[j].parentId === String(menuList[i].id)) {
-          menuList[i].children = arr[j].menu
-          addSubMenu(menuList[i].children)
+  console.time()
+  data.map(subMenu => {
+    if(subMenu.parentId !== 0){
+      for (let j = 0; j < data.length; j++) {
+        if(data[j].id == subMenu.parentId) {
+          if(!data[j].children) data[j].children = []
+          // 利用引用简化逻辑
+          data[j].children.push(subMenu)
         }
       }
     }
+  })
+
+  // 删除data第一层中的非一级菜单
+  let menuList = data.filter((item) => {
+    return item.parentId === ''
+  })
+
+  // 根据orderNum排序
+  function sort(menuList) {
+    for (let i = 0; i < menuList.length; i++) {
+      menuList.sort((a, b) => {
+        return a.orderNum - b.orderNum
+      })
+    }
+    if(menuList.children && menuList.children > 0) {
+      sort(menuList.children)
+    }
   }
-
-  addSubMenu(menuList)
-
-  console.timeEnd() // 好像还没有多次查数据库快，待测试
+  sort(menuList)
+  console.timeEnd()
 
   return {
     code: 0,
