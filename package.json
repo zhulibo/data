@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@koa/router": "^10.0.0",
-    "js-fragment": "^1.2.1",
+    "js-fragment": "^1.2.2",
     "jsonwebtoken": "^9.0.0",
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
