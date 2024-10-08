@@ -7,7 +7,7 @@ const router = require('./router')
 const jwt = require('./middlewares/jwt')
 
 const app = new Koa()
-const port = 3000
+const port = 3001
 
 app
   .use(resDuration)
@@ -24,5 +24,3 @@ app
 app.listen(port, () => {
   console.log(`server is running at http:localhost:${port}`)
 })
-
-// TODO esm
